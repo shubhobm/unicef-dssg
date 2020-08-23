@@ -1,37 +1,25 @@
-unicef-dssg
-===================================
-# Description
+# unicef-dssg
 
-Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change.
+## Installation instructions
+To install the required packages run:
+`pipenv install`
 
-Fixes # (issue)
+If a package is not present in the pipenv run:
+`pipenv install [insert package name here]`
 
-## Type of change
+To initialize to pipenv run:
+`pipenv shell`
 
-Please delete options that are not relevant.
+## Notes
+To install `earthengine-api` run the following:
+`pip install ee`
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] This change requires a documentation update
+After this run `pipenv shell`
 
-# How has this been tested?
+## Installing ipykernel instructions
+To access all versions of packages in a kernel run:
+python -m ipykernel install --user --name unicef-dssg --display-name "Python unicef-dssg kernel"
 
-Please describe the tests that you ran to verify your changes.
-
-
-# What are the relevant Trello task reference(s)?
-
--
--
-
-
-# Checklist:
-
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
+### Data import
+To import google earthengine data after completing the above run:
+`python src/scripts/run_ee_data_download.py`
