@@ -17,7 +17,14 @@ isort = "*"
 black = "*"
 pylama = "*"
 bandit = "*"
-
+rasterio = "*"
+numpy = "*"
+geopandas = "*"
+matplotlib = "*"
+shapely = "*"
+ipykernel = "*"
+joblib = "*"
+tqdm = "*"
 
 [requires]
 python_version = "3.7"
