@@ -18,10 +18,9 @@ class PreprocessEEData:
     def execute(
         self,
         variable_name,
-        df_2019,
-        df_2020,
+        df_list,
     ):
-        df = self.concat_year_df(df_2019, df_2020)
+        df = self.concat_year_df(df_list)
         df = self.creating_datetime_column(df)
         df.to_pickle(f"{CONCATENATED_DATA_SOURCES}LAND_USE.pkl")
 
@@ -30,8 +29,8 @@ class PreprocessEEData:
         df["date"] = pd.to_datetime(df["date"])
         return df
 
-    def concat_year_df(self, df_2019, df_2020):
-        return pd.concat([df_2019, df_2020]).reset_index(drop=True)
+    def concat_year_df(self, df_list):
+        return pd.concat(df_list).reset_index(drop=True)
 
 
 if __name__ == "__main__":
@@ -40,8 +39,10 @@ if __name__ == "__main__":
     Parallel(n_jobs=-1, prefer="threads", verbose=5)(
         delayed(PreprocessEEData().execute)(
             variable_name[:-4],
-            pd.read_pickle(f"{PROCESSED_DATA_SOURCES}{LAND_USE}{variable_name}"),
-            pd.read_pickle(f"{PROCESSED_DATA_SOURCES}{LAND_USE}{variable_name}"),
+            list(
+                pd.read_pickle(f"{PROCESSED_DATA_SOURCES}{LAND_USE}{variable_name}"),
+                pd.read_pickle(f"{PROCESSED_DATA_SOURCES}{LAND_USE}{variable_name}"),
+            ),
         )
         for variable_name in tqdm(variable_set)
     )
