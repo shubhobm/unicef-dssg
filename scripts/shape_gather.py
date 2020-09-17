@@ -28,7 +28,7 @@ def concat_function(file_zip):
     appended_data.append(shp)
 
 if __name__ == "__main__":
-    dem=read_files_ini_dir(PROCESSED_DATA_SOURCE+SHAPE)
+    dem=Helper.read_files_ini_dir(PROCESSED_DATA_SOURCE+SHAPE)
     var_name=set(dem)
     var_name= [item for item in var_name if item.endswith('.zip')]
     appended_data = []
