@@ -1,12 +1,12 @@
 import pandas as pd
 import bootstrap  # noqa
-import os
 from unicef_dssg.lib.helper import Helper
 from unicef_dssg.config import (
     PROCESSED_DATA_SOURCES,
     CONCATENATED_DATA_SOURCES,
     AOD,
     NO2,
+    TEMP,
     LAND_USE,
     PRECIP,
     POP_DEN,
@@ -33,12 +33,14 @@ class PreprocessEEData:
 
 
 if __name__ == "__main__":
-    variable_pkl = Helper.read_files_in_dir(PROCESSED_DATA_SOURCES + NO2)
+    variable_pkl = Helper.read_files_in_dir(PROCESSED_DATA_SOURCES + TEMP)
     variable_set = set(variable_pkl)
-    list_of_dfs = []
     Parallel(n_jobs=-1, prefer="threads", verbose=5)(
         delayed(PreprocessEEData().execute)(
-            list_of_dfs.append(pd.read_pickle(f"{PROCESSED_DATA_SOURCES}{NO2}{variable_name}"))
+            list(
+                pd.read_pickle(f"{PROCESSED_DATA_SOURCES}{TEMP}{variable_name}"),
+                pd.read_pickle(f"{PROCESSED_DATA_SOURCES}{TEMP}{variable_name}"),
+            )
         )
         for variable_name in tqdm(variable_set)
     )
