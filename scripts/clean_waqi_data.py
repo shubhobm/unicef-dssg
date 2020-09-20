@@ -1,0 +1,54 @@
+import bootstrap  # noqa
+from joblib import Parallel, delayed
+import pandas as pd
+import numpy as np
+import datetime as dt
+from unicef_dssg.config import (
+    SECONDARY_DATA_SOURCES,
+    PROCESSED_DATA_SOURCES,
+    CITY,
+)
+from unicef_dssg.lib.helper import Helper
+from tqdm import tqdm
+
+
+class CleanWaqiData:
+    def execute(self, waqi_data_name: str, waqi_data: pd.DataFrame) -> None:
+        # self._remove_metadata_rows(waqi_data)
+        waqi_data = self._create_week_beginning_col(waqi_data)
+        waqi_data = self._create_weekly_average(waqi_data)
+        waqi_data.to_csv(f"{PROCESSED_DATA_SOURCES}/{CITY}{waqi_data_name}.csv", index=False)
+
+    def _create_weekly_average(self, waqi_data: pd.DataFrame):
+        waqi_data = (
+            waqi_data.groupby(["Week", "Country", "City", "Specie"])
+            .agg({"count": "sum", "min": "min", "max": "max", "median": "mean", "variance": "mean"})
+            .round(2)
+            .reset_index()
+        )
+        return waqi_data
+
+    def _create_week_beginning_col(self, waqi_data: pd.DataFrame):
+        waqi_data["Date"] = pd.to_datetime(waqi_data["Date"])
+        waqi_data["Week"] = waqi_data["Date"] - waqi_data["Date"].dt.weekday * np.timedelta64(
+            1, "D"
+        )
+        waqi_data = waqi_data.drop(["Date"], axis=1)
+        return waqi_data
+
+    def _remove_metadata_rows(self, waqi_data: pd.DataFrame):
+        return waqi_data.iloc[4:]
+
+
+if __name__ == "__main__":
+
+    variable_files = Helper.read_files_in_dir(SECONDARY_DATA_SOURCES + CITY)
+    variable_set = set(variable_files)
+    print(variable_set)
+    Parallel(n_jobs=-1, prefer="threads", verbose=5)(
+        delayed(CleanWaqiData().execute)(
+            variable_name[:-4],
+            pd.read_csv(f"{SECONDARY_DATA_SOURCES}{CITY}{variable_name}", error_bad_lines=False),
+        )
+        for variable_name in tqdm(variable_set)
+    )
