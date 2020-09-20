@@ -3,10 +3,13 @@ from joblib import Parallel, delayed
 import pandas as pd
 import numpy as np
 import datetime as dt
+import os
 from unicef_dssg.config import (
     SECONDARY_DATA_SOURCES,
     PROCESSED_DATA_SOURCES,
     CITY,
+    CITY_ALL,
+    CITY_COLS,
 )
 from unicef_dssg.lib.helper import Helper
 from tqdm import tqdm
@@ -17,9 +20,26 @@ class CleanWaqiData:
         # self._remove_metadata_rows(waqi_data)
         waqi_data = self._create_week_beginning_col(waqi_data)
         waqi_data = self._create_weekly_average(waqi_data)
-        waqi_data = self._create_sperate_variable_cols(waqi_data)
+        waqi_data = self._create_seperate_variable_cols(waqi_data)
         waqi_data = self._combine_header_rows(waqi_data)
-        waqi_data.to_csv(f"{PROCESSED_DATA_SOURCES}/{CITY}{waqi_data_name}.csv", index=False)
+        waqi_data = self._subset_cols_to_process(waqi_data)
+        print(waqi_data.shape)
+        if not os.path.isfile(f"{PROCESSED_DATA_SOURCES}/{CITY_ALL}waqi_data_2019_2020.csv"):
+            waqi_data.to_csv(
+                f"{PROCESSED_DATA_SOURCES}/{CITY_ALL}waqi_data_2019_2020.csv",
+                header=CITY_COLS,
+                index=False,
+            )
+        else:  # else it exists so append without writing the header
+            waqi_data.to_csv(
+                f"{PROCESSED_DATA_SOURCES}/{CITY_ALL}waqi_data_2019_2020.csv",
+                mode="a",
+                header=False,
+            )
+
+    def _subset_cols_to_process(self, waqi_data: pd.DataFrame):
+        waqi_data = waqi_data[CITY_COLS]
+        return waqi_data
 
     def _create_weekly_average(self, waqi_data: pd.DataFrame):
         waqi_data = (
@@ -30,7 +50,7 @@ class CleanWaqiData:
         )
         return waqi_data
 
-    def _create_sperate_variable_cols(self, waqi_data: pd.DataFrame):
+    def _create_seperate_variable_cols(self, waqi_data: pd.DataFrame):
 
         waqi_data = waqi_data.pivot_table(
             index=["Week", "Country", "City"],
