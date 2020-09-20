@@ -56,10 +56,12 @@ if __name__ == "__main__":
 	df_zones=from_geofeather(PROCESSED_DATA_SOURCES+'Shape_Joined.feather')
 
 	df_joined=run(df_zones,df_points,use_parallel = True, processes = 10)
-	
-        df_joined=df_joined.reset_index(drop=True)
+	df_joined=df_joined.reset_index(drop=True)
 	aggregations={'NAME_0':'first','value':'mean','TYPE_1':'first','ENGTYPE_1':'first','GID_0':'first','GID_1':'first'}
 	temp_grouped=df_joined.groupby(['date_range','NAME_1']).agg(aggregations)
-        temp_grouped.to_csv(PROCESSED_DATA_SOURCES+'temp_19.csv')
+	temp_grouped.to_csv(PROCESSED_DATA_SOURCES+'temp_19.csv')
+
+
+	
 
 
