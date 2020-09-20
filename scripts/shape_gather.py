@@ -7,6 +7,17 @@ from zipfile import ZipFile
 import pathlib
 import geopandas as gpd
 from unicef_dssg.lib.helper import Helper
+from geofeather import to_geofeather, from_geofeather
+from unicef_dssg.config import (
+    PROCESSED_DATA_SOURCES,
+    CONCATENATED_DATA_SOURCES,
+    AOD,
+    NO2,
+    TEMP,
+    LAND_USE,
+    PRECIP,
+    POP_DEN,
+)
 
 def convert_to_df(file_name):
   with ZipFile(file_name, 'r') as zipObj:
@@ -23,7 +34,6 @@ def convert_to_df(file_name):
 
 def concat_function(file_zip):
   for variable_name in tqdm(file_zip) :
-    print(variable_name)
     shp= convert_to_df(variable_name)
     appended_data.append(shp)
 
@@ -34,3 +44,4 @@ if __name__ == "__main__":
     appended_data = []
     concat_function(var_name)
     shp_concat = pd.concat(appended_data).reset_index(drop=True)
+    to_geofeather(shp_concat, PROCESSED_DATA_SOURCES+'Shape_Joined.feather')
