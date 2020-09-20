@@ -17,6 +17,8 @@ class CleanWaqiData:
         # self._remove_metadata_rows(waqi_data)
         waqi_data = self._create_week_beginning_col(waqi_data)
         waqi_data = self._create_weekly_average(waqi_data)
+        waqi_data = self._create_sperate_variable_cols(waqi_data)
+        waqi_data = self._combine_header_rows(waqi_data)
         waqi_data.to_csv(f"{PROCESSED_DATA_SOURCES}/{CITY}{waqi_data_name}.csv", index=False)
 
     def _create_weekly_average(self, waqi_data: pd.DataFrame):
@@ -25,6 +27,28 @@ class CleanWaqiData:
             .agg({"count": "sum", "min": "min", "max": "max", "median": "mean", "variance": "mean"})
             .round(2)
             .reset_index()
+        )
+        return waqi_data
+
+    def _create_sperate_variable_cols(self, waqi_data: pd.DataFrame):
+
+        waqi_data = waqi_data.pivot_table(
+            index=["Week", "Country", "City"],
+            columns="Specie",
+            values=["count", "min", "max", "median", "variance"],
+            aggfunc="first",
+        ).reset_index()
+
+        return waqi_data
+
+    def _combine_header_rows(self, waqi_data: pd.DataFrame):
+        waqi_data.columns = (
+            waqi_data.columns.map("_".join)
+            .str.strip()
+            .str.lower()
+            .str.replace("-", "_")
+            .str.replace(" ", "_")
+            .str.rstrip("_")
         )
         return waqi_data
 
