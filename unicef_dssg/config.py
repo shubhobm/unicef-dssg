@@ -4,8 +4,13 @@ PROCESSED_DATA_SOURCES = "data/Processed_data/"
 CONCATENATED_DATA_SOURCES = "data/Concatenated_data/"
 
 SATELLITE_DATA = "satellite_data/"
+
 YEAR_2019 = "2019/"
 YEAR_2020 = "2020/"
+
+AOD_CITY = "AOD_CITY/"
+CITY_SHAPE = "CITY_SHAPE/"
+WAQI = "WAQI/"
 
 POP_DEN = "POP_DEN/"
 LAND_USE = "LAND_USE/"
