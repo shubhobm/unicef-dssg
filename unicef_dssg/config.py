@@ -1,9 +1,16 @@
 # Directory structure
-SECONDARY_DATA_SOURCES = "data/Secondary_sources/"
-PROCESSED_DATA_SOURCES = "data/Processed_data/"
-CONCATENATED_DATA_SOURCES = "data/Concatenated_data/"
+SECONDARY_DATA_SOURCES = "data/Secondary_Sources/"
+PROCESSED_DATA_SOURCES = "data/Processed_Data/"
+CONCATENATED_DATA_SOURCES = "data/Concatenated_Data/"
 
-SATELLITE_DATA = "satellite_data/"
+SATELLITE_DATA = "Satellite_Data/"
+POPULATION = "Population/"
+NASA_CITY = "NASA_Cities/"
+GADM_WORLD = "World/"
+MOBILITY = "Mobility/"
+COVID = "COVID/"
+GINI = "Gini_Coefficient/"
+
 
 YEAR_2019 = "2019/"
 YEAR_2020 = "2020/"
@@ -11,6 +18,7 @@ YEAR_2020 = "2020/"
 AOD_CITY = "AOD_CITY/"
 CITY_SHAPE = "CITY_SHAPE/"
 WAQI = "WAQI/"
+AOD_WAQI_CITY = "AOD_WAQI_CITY/"
 
 POP_DEN = "POP_DEN/"
 LAND_USE = "LAND_USE/"
@@ -19,6 +27,7 @@ NO2 = "NO2/"
 AOD = "AOD/"
 CITY = "CITY/"
 CITY_ALL = "CITY_ALL/"
+COUNTRY = "COUNTRY/"
 CITY_COLS = [
     "week",
     "country",
