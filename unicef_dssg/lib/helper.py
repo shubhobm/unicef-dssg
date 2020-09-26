@@ -22,7 +22,7 @@ class Helper:
 
     @staticmethod
     def read_files_in_dir(dir_path: str) -> List[str]:
-        to_remove = [".DS_Store", "", ".keep"]
+        to_remove = [".DS_Store", ".ipynb_checkpoints", ".keep"]
 
         files = os.listdir(dir_path)
         return [item for item in files if item not in to_remove]
